@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!--新增配置-->
+	<bean id="cscWltCoinInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltCoinInfoMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltcoininfoDao" class="org.csc.wlt.dao.CscWltCoinInfoDao" >
+		<property name="mapper" ref="cscWltCoinInfoMapper" />
+	</bean>
+
+	<bean id="cscWltChannelInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltChannelInfoMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltchannelinfoDao" class="org.csc.wlt.dao.CscWltChannelInfoDao">
+		<property name="mapper" ref="cscWltChannelInfoMapper"/>
+	</bean>
+
+	<bean id="cscWltCoinRateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltCoinRateMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltcoinrateDao" class="org.csc.wlt.dao.CscWltCoinRateDao">
+		<property name="mapper" ref="cscWltCoinRateMapper"/>
+	</bean>
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
+		<property name="url"><value>jdbc:mysql://172.18.92.101:3306/wallet</value></property>
+		<property name="username"><value>wallet</value></property>
+		<property name="password"><value>wallet</value></property>
+	</bean>
+
+	<!-- define the SqlSessionFactory -->
+	<bean id="extSqlSeSssionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:/mappers/*Mapper.xml" />
+	</bean>
+</beans>

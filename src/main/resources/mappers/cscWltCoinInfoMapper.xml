@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.csc.wlt.mapper.CscWltCoinInfoMapper">
+    <resultMap type="org.csc.wlt.entity.CscWltCoinInfo" id="cscWltCoinInfoMap">
+        <result property="autoId" column="auto_id"/>
+        <result property="coinSymbol" column="coin_symbol"/>
+        <result property="coinName" column="coin_name"/>
+        <result property="coinAddress" column="coin_address"/>
+        <result property="coinImg" column="coin_img"/>
+        <result property="coinMain" column="coin_main"/>
+        <result property="coinGroom" column="coin_groom"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="dmlFlag" column="dml_flag"/>
+        <result property="creater" column="creater"/>
+        <result property="updator" column="updator"/>
+    </resultMap>
+    <select id="findByCondition" parameterType="org.csc.wlt.model.CscWltCoinModel" resultMap="cscWltCoinInfoMap">
+      select
+        *
+      from csc_wlt_coin_info
+      where dml_flag !='3'
+      <if test="coinAddressArray != null and coinAddressArray.size()!=0">
+          and coin_address in
+          <foreach collection="coinAddressArray"  item="coinAddress" open="(" separator="," close=")">
+              #{coinAddress}
+          </foreach>
+      </if>
+      <if test="coinMain != null and coinMain!=''">
+          and (coin_main = #{coinMain} or coin_main = '0')
+      </if>
+    </select>
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csc.wlt.mapper.CscCodeMapMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="org.csc.wlt.entity.CscCodeMap" id="cscCodeMapMap">
+        <result property="errCode" column="err_code" />
+        <result property="errMessage" column="err_message" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <select id="queryOne" resultMap="cscCodeMapMap">
+		select * from csc_code_map where err_code = #{autoId}
+	</select>
+
+    <select id="queryList" resultMap="cscCodeMapMap" parameterType="org.csc.wlt.entity.CscCodeMapModel">
+        select * from csc_code_map
+        where 1=1
+        <if test="errMessage != null">
+            and `err_message` = #{errMessage}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int" parameterType="org.csc.wlt.entity.CscCodeMapModel">
+        select count(*) from csc_code_map
+        where 1=1
+        <if test="errMessage != null">
+            and `err_message` = #{errMessage}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="org.csc.wlt.entity.CscCodeMap">
+		insert into csc_code_map
+		(
+    			`err_code`, 
+        			`err_message`, 
+        			`create_time`, 
+        			`update_time`, 
+        			`status`
+    		)
+		values
+		(
+    			#{errCode}, 
+        			#{errMessage}, 
+        			#{createTime}, 
+        			#{updateTime}, 
+        			#{status}
+    		)
+	</insert>
+
+    <insert id="batchInsert" parameterType="org.csc.wlt.entity.CscCodeMap">
+        insert into csc_code_map
+        (
+        `err_code`,
+        `err_message`,
+        `create_time`,
+        `update_time`,
+        `status`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.errCode},
+            #{item.errMessage},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.status}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="org.csc.wlt.entity.CscCodeMapModel">
+        update csc_code_map
+        <set>
+            <if test="errMessage != null">
+                `err_message` = #{errMessage},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+            <if test="status != null">
+                `status` = #{status}
+            </if>
+        </set>
+        where err_code = #{errCode}
+    </update>
+
+
+    <delete id="deleteBatch">
+        delete from csc_code_map where err_code in
+        <foreach item="errCode" collection="array" open="(" separator="," close=")">
+            #{errCode}
+        </foreach>
+    </delete>
+
+</mapper>

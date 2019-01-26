@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csc.wlt.mapper.CscWltAddressMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="org.csc.wlt.entity.CscWltAddress" id="cscWltAddressMap">
+        <result property="addressId" column="address_id" />
+        <result property="cUserId" column="c_user_id" />
+        <result property="address" column="address" />
+        <result property="type" column="type" />
+        <result property="publicKey" column="public_key" />
+        <result property="privateKey" column="private_key" />
+        <result property="nonce" column="nonce" />
+        <result property="balance" column="balance" />
+        <result property="seed" column="seed" />
+        <result property="bcuid" column="bcuid" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedTime" column="updated_time" />
+        <result property="reserved1" column="reserved1" />
+        <result property="reserved2" column="reserved2" />
+    </resultMap>
+
+    <select id="queryOne" resultMap="cscWltAddressMap">
+		select * from csc_wlt_address where address_id = #{autoId}
+	</select>
+
+    <select id="queryList" resultMap="cscWltAddressMap" parameterType="org.csc.wlt.entity.CscWltAddressModel">
+        select * from csc_wlt_address
+        where 1=1
+        <if test="cUserId != null">
+            and `c_user_id` = #{cUserId}
+        </if>
+        <if test="address != null">
+            and `address` = #{address}
+        </if>
+        <if test="type != null">
+            and `type` = #{type}
+        </if>
+        <if test="publicKey != null">
+            and `public_key` = #{publicKey}
+        </if>
+        <if test="privateKey != null">
+            and `private_key` = #{privateKey}
+        </if>
+        <if test="nonce != null">
+            and `nonce` = #{nonce}
+        </if>
+        <if test="balance != null">
+            and `balance` = #{balance}
+        </if>
+        <if test="seed != null">
+            and `seed` = #{seed}
+        </if>
+        <if test="bcuid != null">
+            and `bcuid` = #{bcuid}
+        </if>
+        <if test="createdTime != null">
+            and `created_time` = #{createdTime}
+        </if>
+        <if test="updatedTime != null">
+            and `updated_time` = #{updatedTime}
+        </if>
+        <if test="reserved1 != null">
+            and `reserved1` = #{reserved1}
+        </if>
+        <if test="reserved2 != null">
+            and `reserved2` = #{reserved2}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int" parameterType="org.csc.wlt.entity.CscWltAddressModel">
+        select count(*) from csc_wlt_address
+        where 1=1
+        <if test="cUserId != null">
+            and `c_user_id` = #{cUserId}
+        </if>
+        <if test="address != null">
+            and `address` = #{address}
+        </if>
+        <if test="type != null">
+            and `type` = #{type}
+        </if>
+        <if test="publicKey != null">
+            and `public_key` = #{publicKey}
+        </if>
+        <if test="privateKey != null">
+            and `private_key` = #{privateKey}
+        </if>
+        <if test="nonce != null">
+            and `nonce` = #{nonce}
+        </if>
+        <if test="balance != null">
+            and `balance` = #{balance}
+        </if>
+        <if test="seed != null">
+            and `seed` = #{seed}
+        </if>
+        <if test="bcuid != null">
+            and `bcuid` = #{bcuid}
+        </if>
+        <if test="createdTime != null">
+            and `created_time` = #{createdTime}
+        </if>
+        <if test="updatedTime != null">
+            and `updated_time` = #{updatedTime}
+        </if>
+        <if test="reserved1 != null">
+            and `reserved1` = #{reserved1}
+        </if>
+        <if test="reserved2 != null">
+            and `reserved2` = #{reserved2}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="org.csc.wlt.entity.CscWltAddress">
+		insert into csc_wlt_address
+		(
+    			`address_id`, 
+        			`c_user_id`, 
+        			`address`, 
+        			`type`, 
+        			`public_key`, 
+        			`private_key`, 
+        			`nonce`, 
+        			`balance`, 
+        			`seed`, 
+        			`bcuid`, 
+        			`created_time`, 
+        			`updated_time`, 
+        			`reserved1`, 
+        			`reserved2`
+    		)
+		values
+		(
+    			#{addressId}, 
+        			#{cUserId}, 
+        			#{address}, 
+        			#{type}, 
+        			#{publicKey}, 
+        			#{privateKey}, 
+        			#{nonce}, 
+        			#{balance}, 
+        			#{seed}, 
+        			#{bcuid}, 
+        			#{createdTime}, 
+        			#{updatedTime}, 
+        			#{reserved1}, 
+        			#{reserved2}
+    		)
+	</insert>
+
+    <insert id="batchInsert" parameterType="org.csc.wlt.entity.CscWltAddress">
+        insert into csc_wlt_address
+        (
+        `address_id`,
+        `c_user_id`,
+        `address`,
+        `type`,
+        `public_key`,
+        `private_key`,
+        `nonce`,
+        `balance`,
+        `seed`,
+        `bcuid`,
+        `created_time`,
+        `updated_time`,
+        `reserved1`,
+        `reserved2`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.addressId},
+            #{item.cUserId},
+            #{item.address},
+            #{item.type},
+            #{item.publicKey},
+            #{item.privateKey},
+            #{item.nonce},
+            #{item.balance},
+            #{item.seed},
+            #{item.bcuid},
+            #{item.createdTime},
+            #{item.updatedTime},
+            #{item.reserved1},
+            #{item.reserved2}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="org.csc.wlt.entity.CscWltAddressModel">
+        update csc_wlt_address
+        <set>
+            <if test="cUserId != null">
+                `c_user_id` = #{cUserId},
+            </if>
+            <if test="address != null">
+                `address` = #{address},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+            <if test="publicKey != null">
+                `public_key` = #{publicKey},
+            </if>
+            <if test="privateKey != null">
+                `private_key` = #{privateKey},
+            </if>
+            <if test="nonce != null">
+                `nonce` = #{nonce},
+            </if>
+            <if test="balance != null">
+                `balance` = #{balance},
+            </if>
+            <if test="seed != null">
+                `seed` = #{seed},
+            </if>
+            <if test="bcuid != null">
+                `bcuid` = #{bcuid},
+            </if>
+            <if test="createdTime != null">
+                `created_time` = #{createdTime},
+            </if>
+            <if test="updatedTime != null">
+                `updated_time` = #{updatedTime},
+            </if>
+            <if test="reserved1 != null">
+                `reserved1` = #{reserved1},
+            </if>
+            <if test="reserved2 != null">
+                `reserved2` = #{reserved2}
+            </if>
+        </set>
+        where address_id = #{addressId}
+    </update>
+
+
+    <delete id="deleteBatch">
+        delete from csc_wlt_address where address_id in
+        <foreach item="addressId" collection="array" open="(" separator="," close=")">
+            #{addressId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csc.wlt.mapper.CscSwitchCodeMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="org.csc.wlt.entity.CscSwitchCode" id="cscSwitchCodeMap">
+        <result property="othCode" column="oth_code" />
+        <result property="othMessage" column="oth_message" />
+        <result property="chanId" column="chan_id" />
+        <result property="errCode" column="err_code" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <select id="queryOne" resultMap="cscSwitchCodeMap">
+		select * from csc_switch_code where oth_code = #{autoId}
+	</select>
+
+    <select id="queryList" resultMap="cscSwitchCodeMap" parameterType="org.csc.wlt.entity.CscSwitchCodeModel">
+        select * from csc_switch_code
+        where 1=1
+        <if test="othMessage != null">
+            and `oth_message` = #{othMessage}
+        </if>
+        <if test="chanId != null">
+            and `chan_id` = #{chanId}
+        </if>
+        <if test="errCode != null">
+            and `err_code` = #{errCode}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int" parameterType="org.csc.wlt.entity.CscSwitchCodeModel">
+        select count(*) from csc_switch_code
+        where 1=1
+        <if test="othMessage != null">
+            and `oth_message` = #{othMessage}
+        </if>
+        <if test="chanId != null">
+            and `chan_id` = #{chanId}
+        </if>
+        <if test="errCode != null">
+            and `err_code` = #{errCode}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="org.csc.wlt.entity.CscSwitchCode">
+		insert into csc_switch_code
+		(
+    			`oth_code`, 
+        			`oth_message`, 
+        			`chan_id`, 
+        			`err_code`, 
+        			`create_time`, 
+        			`update_time`, 
+        			`status`
+    		)
+		values
+		(
+    			#{othCode}, 
+        			#{othMessage}, 
+        			#{chanId}, 
+        			#{errCode}, 
+        			#{createTime}, 
+        			#{updateTime}, 
+        			#{status}
+    		)
+	</insert>
+
+    <insert id="batchInsert" parameterType="org.csc.wlt.entity.CscSwitchCode">
+        insert into csc_switch_code
+        (
+        `oth_code`,
+        `oth_message`,
+        `chan_id`,
+        `err_code`,
+        `create_time`,
+        `update_time`,
+        `status`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.othCode},
+            #{item.othMessage},
+            #{item.chanId},
+            #{item.errCode},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.status}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="org.csc.wlt.entity.CscSwitchCodeModel">
+        update csc_switch_code
+        <set>
+            <if test="othMessage != null">
+                `oth_message` = #{othMessage},
+            </if>
+            <if test="chanId != null">
+                `chan_id` = #{chanId},
+            </if>
+            <if test="errCode != null">
+                `err_code` = #{errCode},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+            <if test="status != null">
+                `status` = #{status}
+            </if>
+        </set>
+        where oth_code = #{othCode}
+    </update>
+
+
+    <delete id="deleteBatch">
+        delete from csc_switch_code where oth_code in
+        <foreach item="othCode" collection="array" open="(" separator="," close=")">
+            #{othCode}
+        </foreach>
+    </delete>
+
+</mapper>

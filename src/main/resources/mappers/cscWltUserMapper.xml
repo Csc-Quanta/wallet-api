@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csc.wlt.mapper.CscWltUserMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="org.csc.wlt.entity.CscWltUser" id="cscWltUserMap">
+        <result property="autoId" column="auto_id" />
+        <result property="appId" column="app_id" />
+        <result property="wltType" column="wlt_type" />
+        <result property="cUserId" column="c_user_id" />
+        <result property="wltName" column="wlt_name" />
+        <result property="createType" column="create_type" />
+        <result property="wltProtocol" column="wlt_protocol" />
+        <result property="status" column="status" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <select id="queryOne" resultMap="cscWltUserMap">
+		select * from csc_wlt_user where auto_id = #{autoId}
+	</select>
+
+    <select id="queryList" resultMap="cscWltUserMap" parameterType="org.csc.wlt.entity.CscWltUserModel">
+        select * from csc_wlt_user
+        where 1=1
+        <if test="appId != null">
+            and `app_id` = #{appId}
+        </if>
+        <if test="wltType != null">
+            and `wlt_type` = #{wltType}
+        </if>
+        <if test="cUserId != null">
+            and `c_user_id` = #{cUserId}
+        </if>
+        <if test="wltName != null">
+            and `wlt_name` = #{wltName}
+        </if>
+        <if test="createType != null">
+            and `create_type` = #{createType}
+        </if>
+        <if test="wltProtocol != null">
+            and `wlt_protocol` = #{wltProtocol}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int" parameterType="org.csc.wlt.entity.CscWltUserModel">
+        select count(*) from csc_wlt_user
+        where 1=1
+        <if test="appId != null">
+            and `app_id` = #{appId}
+        </if>
+        <if test="wltType != null">
+            and `wlt_type` = #{wltType}
+        </if>
+        <if test="cUserId != null">
+            and `c_user_id` = #{cUserId}
+        </if>
+        <if test="wltName != null">
+            and `wlt_name` = #{wltName}
+        </if>
+        <if test="createType != null">
+            and `create_type` = #{createType}
+        </if>
+        <if test="wltProtocol != null">
+            and `wlt_protocol` = #{wltProtocol}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="org.csc.wlt.entity.CscWltUser" useGeneratedKeys="true" keyProperty="autoId">
+		insert into csc_wlt_user
+		(
+        			`app_id`, 
+        			`wlt_type`, 
+        			`c_user_id`, 
+        			`wlt_name`, 
+        			`create_type`, 
+        			`wlt_protocol`, 
+        			`status`, 
+        			`create_time`, 
+        			`update_time`
+    		)
+		values
+		(
+        			#{appId}, 
+        			#{wltType}, 
+        			#{cUserId}, 
+        			#{wltName}, 
+        			#{createType}, 
+        			#{wltProtocol}, 
+        			#{status}, 
+        			#{createTime}, 
+        			#{updateTime}
+    		)
+	</insert>
+
+    <insert id="batchInsert" parameterType="org.csc.wlt.entity.CscWltUser" useGeneratedKeys="true" keyProperty="autoId">
+        insert into csc_wlt_user
+        (
+        `app_id`,
+        `wlt_type`,
+        `c_user_id`,
+        `wlt_name`,
+        `create_type`,
+        `wlt_protocol`,
+        `status`,
+        `create_time`,
+        `update_time`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.appId},
+            #{item.wltType},
+            #{item.cUserId},
+            #{item.wltName},
+            #{item.createType},
+            #{item.wltProtocol},
+            #{item.status},
+            #{item.createTime},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="org.csc.wlt.entity.CscWltUserModel">
+        update csc_wlt_user
+        <set>
+            <if test="appId != null">
+                `app_id` = #{appId},
+            </if>
+            <if test="wltType != null">
+                `wlt_type` = #{wltType},
+            </if>
+            <if test="cUserId != null">
+                `c_user_id` = #{cUserId},
+            </if>
+            <if test="wltName != null">
+                `wlt_name` = #{wltName},
+            </if>
+            <if test="createType != null">
+                `create_type` = #{createType},
+            </if>
+            <if test="wltProtocol != null">
+                `wlt_protocol` = #{wltProtocol},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime}
+            </if>
+        </set>
+        where auto_id = #{autoId}
+    </update>
+
+
+    <delete id="deleteBatch">
+        delete from csc_wlt_user where auto_id in
+        <foreach item="autoId" collection="array" open="(" separator="," close=")">
+            #{autoId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package org.csc.wallet.service;
+
+enum PUSERCommand {
+    URT=0;//用户注册USER REGISTER UserRegisterReq,Result
+    UEX=1;//判断用户是否存在 UserExistReq,UserExistRes
+    SMS=2;//根据手机号码发送短信 SendMsgReq,Result
+    RLP=3;//重置登录密码 ResetLoginPasswordReq,Result
+    ULP=4;//修改登录密码 UpdateLoginPasswordReq,Result
+    USL=5;//用户登录 UserLoginReq,UserLoginRes
+    UOL=6;//用户退出登录 UserOutLoginReq,Result
+    VSM=7;//校验短信验证码 VerifySmsCodeReq,VerifySmsCodeRes
+    QUW=8;//根据用户id查询钱包数据  QueryUserWltDataReq，QueryUserWltDataRes
+    UWD=9;//上传钱包数据  UploadUserWltDataReq,Result
+}
+message UploadUserWltDataReq{
+    string userId=1;//用户id
+    repeated WalletDate walletData = 2;//钱包数据
+}
+message QueryUserWltDataRes{
+    int32 rpl_code=1;//响应码
+    string rpl_msg=2;//响应信息
+    repeated WalletDate walletData=3;//钱包数据
+}
+
+message WalletDate{
+    string walletName=1;//钱包名称
+    string walletType=2;//钱包类型 1：CSCQ,2：BTC,3：ETH,4：EOS,5：CWV
+    string createType=3;//创建类型 1：创建，2：导入
+    string walletProtocol=4;//钱包协议 3：44协议
+    repeated string data=5;//钱包数据
+
+}
+message QueryUserWltDataReq{
+    string userId=1;//用户id
+}
+message VerifySmsCodeRes{
+    int32 rpl_code=1;//响应码
+    string rpl_msg=2;//响应信息
+    string smsPassToken=3;//短信校验通过的凭证
+}
+message VerifySmsCodeReq{
+    string userName=1;//手机号码
+    string type=2;//csc_wlt_app_param groupid = 0
+    string verifyCode=3;//短信校验码
+}
+message UserOutLoginReq{
+
+}
+message UserLoginReq{
+    string userName=1;//手机号码
+    string pwd=2;//密码
+}
+message UserLoginRes{
+    int32 rpl_code=1;//响应码
+    string rpl_msg=2;//响应信息
+    string grantToken=3;//登录token
+    string cUserId=4;//用户id
+}
+message UpdateLoginPasswordReq{
+    string userName=1;//手机号码
+    string newPwd=2;//新密码
+    string oldPwd=3;//老的密码
+}
+message ResetLoginPasswordReq{
+    string userName=1;//手机号码
+    string newPwd=2;//新密码
+    string smsPassToken=3;//短信验证通过的凭证
+}
+message SendMsgReq{
+    string userName=1;//手机号码 用户名
+    string type = 2;//发送短信的类型
+}
+message UserExistReq{
+    string userName = 1;//用户名 手机号码
+}
+message UserExistRes{
+    int32 rpl_code =1;//返回码
+    string rpl_msg=2;//接口返回信息
+    string flag=3;//标识 是否已经注册 1：已注册；2未注册
+}
+message UserRegisterReq{
+    string userName = 1;//用户名 手机号码
+    string mobile=2;//手机号码
+    string pwd=3;//登录密码
+    string nick=4;//昵称
+    string birthday=5;//生日
+    string gender=6;//姓名
+    string email=7;//邮箱
+    string name=8;//姓名
+    string idCard=9;//身份证号
+    string smsPassToken=10;//短信验证token
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.csc.wlt.mapper.CscWltCoinRateMapper">
+    <resultMap type="org.csc.wlt.entity.CscWltCoinRate" id="cscWltCoinRateMap">
+        <result property="autoId" column="auto_id"/>
+        <result property="symbol" column="symbol"/>
+        <result property="coinRate" column="coin_rate"/>
+        <result property="remarks" column="remarks"/>
+        <result property="dmlFlag" column="dml_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="creater" column="creater"/>
+        <result property="updator" column="updator"/>
+    </resultMap>
+    <select id="queryRate" parameterType="org.csc.wlt.entity.CscWltCoinRate" resultMap="cscWltCoinRateMap">
+        select
+              *
+        from  csc_wlt_coin_rate
+        where dml_flag !='3'
+        <if test="list != null and list.size!=0">
+            and symbol in
+            <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+                #{item.symbol}
+            </foreach>
+        </if>
+    </select>
+    <update id="batchUpdate" parameterType="org.csc.wlt.entity.CscWltCoinRate">
+        update csc_wlt_coin_rate
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="coin_rate =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                        <if test="item.coinRate != null and item.coinRate!=''">
+                          when symbol=#{item.symbol} then #{item.coinRate}
+                        </if>
+                </foreach>
+            </trim>
+            dml_flag = '2',update_time = now()
+        </trim>
+        where symbol in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            <if test="item.coinRate != null and item.coinRate!=''">
+              #{item.symbol}
+            </if>
+        </foreach>
+    </update>
+
+    <select id="queryBySymbol" parameterType="org.csc.wlt.model.CscWltCoinRateModel" resultMap="cscWltCoinRateMap">
+        select * from csc_wlt_coin_rate
+        where dml_flag !='3'
+        <if test="symbol!=null and symbol!=''">
+            and symbol = #{symbol}
+        </if>
+        <if test="symbolLike!=null and symbolLike!=''">
+            and symbol like CONCAT('%',#{symbolLike})
+        </if>
+        <if test="updateTime!=null">
+            and update_time > #{updateTime}
+        </if>
+    </select>
+</mapper>

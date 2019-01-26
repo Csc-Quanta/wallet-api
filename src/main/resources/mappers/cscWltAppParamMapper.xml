@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csc.wlt.mapper.CscWltAppParamMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="org.csc.wlt.entity.CscWltAppParam" id="cscWltAppParamMap">
+        <result property="autoId" column="auto_id" />
+        <result property="appId" column="app_id" />
+        <result property="groupId" column="group_Id" />
+        <result property="propertyId" column="property_id" />
+        <result property="propertyName" column="property_name" />
+        <result property="status" column="status" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <select id="queryOne" resultMap="cscWltAppParamMap">
+		select * from csc_wlt_app_param where auto_id = #{autoId}
+	</select>
+
+    <select id="queryList" resultMap="cscWltAppParamMap" parameterType="org.csc.wlt.entity.CscWltAppParamModel">
+        select * from csc_wlt_app_param
+        where 1=1
+        <if test="appId != null">
+            and `app_id` = #{appId}
+        </if>
+        <if test="groupId != null">
+            and `group_Id` = #{groupId}
+        </if>
+        <if test="propertyId != null">
+            and `property_id` = #{propertyId}
+        </if>
+        <if test="propertyName != null">
+            and `property_name` = #{propertyName}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int" parameterType="org.csc.wlt.entity.CscWltAppParamModel">
+        select count(*) from csc_wlt_app_param
+        where 1=1
+        <if test="appId != null">
+            and `app_id` = #{appId}
+        </if>
+        <if test="groupId != null">
+            and `group_Id` = #{groupId}
+        </if>
+        <if test="propertyId != null">
+            and `property_id` = #{propertyId}
+        </if>
+        <if test="propertyName != null">
+            and `property_name` = #{propertyName}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="org.csc.wlt.entity.CscWltAppParam" useGeneratedKeys="true" keyProperty="autoId">
+		insert into csc_wlt_app_param
+		(
+        			`app_id`, 
+        			`group_Id`, 
+        			`property_id`, 
+        			`property_name`, 
+        			`status`, 
+        			`create_time`, 
+        			`update_time`
+    		)
+		values
+		(
+        			#{appId}, 
+        			#{groupId}, 
+        			#{propertyId}, 
+        			#{propertyName}, 
+        			#{status}, 
+        			#{createTime}, 
+        			#{updateTime}
+    		)
+	</insert>
+
+    <insert id="batchInsert" parameterType="org.csc.wlt.entity.CscWltAppParam" useGeneratedKeys="true" keyProperty="autoId">
+        insert into csc_wlt_app_param
+        (
+        `app_id`,
+        `group_Id`,
+        `property_id`,
+        `property_name`,
+        `status`,
+        `create_time`,
+        `update_time`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.appId},
+            #{item.groupId},
+            #{item.propertyId},
+            #{item.propertyName},
+            #{item.status},
+            #{item.createTime},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="org.csc.wlt.entity.CscWltAppParamModel">
+        update csc_wlt_app_param
+        <set>
+            <if test="appId != null">
+                `app_id` = #{appId},
+            </if>
+            <if test="groupId != null">
+                `group_Id` = #{groupId},
+            </if>
+            <if test="propertyId != null">
+                `property_id` = #{propertyId},
+            </if>
+            <if test="propertyName != null">
+                `property_name` = #{propertyName},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime}
+            </if>
+        </set>
+        where auto_id = #{autoId}
+    </update>
+
+
+    <delete id="deleteBatch">
+        delete from csc_wlt_app_param where auto_id in
+        <foreach item="autoId" collection="array" open="(" separator="," close=")">
+            #{autoId}
+        </foreach>
+    </delete>
+
+</mapper>

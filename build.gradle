@@ -1,0 +1,42 @@
+buildscript {
+	repositories{ maven{ url "$repos_host" } }
+	dependencies {
+		classpath "onight.osgi:zpp-gradle_1.8:3.3.1"
+		classpath "org.csc:chainapi:4.0.3"
+	 }
+}
+
+plugins {
+	id 'io.franzbecker.gradle-lombok' version '1.14'
+	id "com.google.protobuf" version "0.8.8"
+}
+  
+version = '4.0.2'
+
+project.group='org.csc'
+
+apply plugin: 'zippo'
+apply plugin: 'maven'
+
+dependencies {
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.1'
+	compile 'org.csc:bcvm:4.0.2'
+	compile 'org.csc:bc_redis_tl:4.0.0'
+	compile("org.fc.zippo:org.fc.zippo.ordbutils:4.0.1-mysql")
+	includeInJar 'com.googlecode.protobuf-java-format:protobuf-java-format:1.4'
+	includeInJar 'com.zcs:zcs-message-api:0.0.3-SNAPSHOT'
+	includeInJar (group: 'org.apache.commons', name: 'commons-collections4', version: '4.2')
+	includeInJar group: 'com.alibaba', name: 'fastjson', version: '1.2.53'
+	includeInJar group: 'org.springframework', name: 'spring-web', version: '3.0.2.RELEASE'
+	includeInJar 'com.zcs:zcs-user-api:1.0.40'
+}
+
+jar {
+	manifest{
+		attributes( 'Import-Ignore':'com.alibaba.fastjson,org.apache.commons.collections4,com.zcs,org.springframework,net.sf.ehcache')
+	}
+}
+
+
+
+

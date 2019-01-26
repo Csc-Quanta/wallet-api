@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csc.wlt.mapper.CscWltDataMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="org.csc.wlt.entity.CscWltData" id="cscWltDataMap">
+        <result property="autoId" column="auto_id" />
+        <result property="wltUserId" column="wlt_user_id" />
+        <result property="data" column="data" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <select id="queryOne" resultMap="cscWltDataMap">
+		select * from csc_wlt_data where auto_id = #{autoId}
+	</select>
+
+    <select id="queryList" resultMap="cscWltDataMap" parameterType="org.csc.wlt.entity.CscWltDataModel">
+        select * from csc_wlt_data
+        where 1=1
+        <if test="wltUserId != null">
+            and `wlt_user_id` = #{wltUserId}
+        </if>
+        <if test="data != null">
+            and `data` = #{data}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int" parameterType="org.csc.wlt.entity.CscWltDataModel">
+        select count(*) from csc_wlt_data
+        where 1=1
+        <if test="wltUserId != null">
+            and `wlt_user_id` = #{wltUserId}
+        </if>
+        <if test="data != null">
+            and `data` = #{data}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="org.csc.wlt.entity.CscWltData" useGeneratedKeys="true" keyProperty="autoId">
+		insert into csc_wlt_data
+		(
+        			`wlt_user_id`, 
+        			`data`, 
+        			`create_time`, 
+        			`update_time`, 
+        			`status`
+    		)
+		values
+		(
+        			#{wltUserId}, 
+        			#{data}, 
+        			#{createTime}, 
+        			#{updateTime}, 
+        			#{status}
+    		)
+	</insert>
+
+    <insert id="batchInsert" parameterType="org.csc.wlt.entity.CscWltData" useGeneratedKeys="true" keyProperty="autoId">
+        insert into csc_wlt_data
+        (
+        `wlt_user_id`,
+        `data`,
+        `create_time`,
+        `update_time`,
+        `status`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.wltUserId},
+            #{item.data},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.status}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="org.csc.wlt.entity.CscWltDataModel">
+        update csc_wlt_data
+        <set>
+            <if test="wltUserId != null">
+                `wlt_user_id` = #{wltUserId},
+            </if>
+            <if test="data != null">
+                `data` = #{data},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+            <if test="status != null">
+                `status` = #{status}
+            </if>
+        </set>
+        where auto_id = #{autoId}
+    </update>
+
+
+    <delete id="deleteBatch">
+        delete from csc_wlt_data where auto_id in
+        <foreach item="autoId" collection="array" open="(" separator="," close=")">
+            #{autoId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="cscWltContractMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltContractMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscwltcontractDao" class="org.csc.wlt.dao.CscWltContractDao" >
+		<property name="mapper" ref="cscWltContractMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscWltContractRecordMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltContractRecordMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscwltcontractrecordDao" class="org.csc.wlt.dao.CscWltContractRecordDao" >
+		<property name="mapper" ref="cscWltContractRecordMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscWltParameterMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltParameterMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscwltparameterDao" class="org.csc.wlt.dao.CscWltParameterDao" >
+		<property name="mapper" ref="cscWltParameterMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscWltTxMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltTxMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="cscwlttxDao" class="org.csc.wlt.dao.CscWltTxDao" >
+		<property name="mapper" ref="cscWltTxMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+
+	<!--新增配置-->
+	<bean id="cscWltCoinInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltCoinInfoMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltcoininfoDao" class="org.csc.wlt.dao.CscWltCoinInfoDao" >
+		<property name="mapper" ref="cscWltCoinInfoMapper" />
+	</bean>
+
+	<bean id="cscWltChannelInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltChannelInfoMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltchannelinfoDao" class="org.csc.wlt.dao.CscWltChannelInfoDao">
+		<property name="mapper" ref="cscWltChannelInfoMapper"/>
+	</bean>
+
+	<bean id="cscWltCoinRateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltCoinRateMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltcoinrateDao" class="org.csc.wlt.dao.CscWltCoinRateDao">
+		<property name="mapper" ref="cscWltCoinRateMapper"/>
+	</bean>
+
+
+	<bean id="cscWltUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltUserMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltuserDao" class="org.csc.wlt.dao.CscWltUserDao">
+		<property name="mapper" ref="cscWltUserMapper"/>
+	</bean>
+
+	<bean id="cscWltDataMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltDataMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltdataDao" class="org.csc.wlt.dao.CscWltDataDao">
+		<property name="mapper" ref="cscWltDataMapper"/>
+	</bean>
+	<bean id="cscWltAppParamMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltAppParamMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltappparamDao" class="org.csc.wlt.dao.CscWltAppParamDao">
+		<property name="mapper" ref="cscWltAppParamMapper"/>
+	</bean>
+
+	<bean id="cscCodeMapMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscCodeMapMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="csccodemapDao" class="org.csc.wlt.dao.CscCodeMapDao">
+		<property name="mapper" ref="cscCodeMapMapper"/>
+	</bean>
+
+	<bean id="cscSwitchCodeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscSwitchCodeMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscswitchcodeDao" class="org.csc.wlt.dao.CscSwitchCodeDao">
+		<property name="mapper" ref="cscSwitchCodeMapper"/>
+	</bean>
+
+	<bean id="cscWltAddressMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.csc.wlt.mapper.CscWltAddressMapper" />
+		<property name="sqlSessionFactory" ref="extSqlSeSssionFactory" />
+	</bean>
+	<bean id="cscwltaddressDao" class="org.csc.wlt.dao.CscWltAddressDao">
+		<property name="mapper" ref="cscWltAddressMapper"/>
+	</bean>
+
+	<!-- define the SqlSessionFactory -->
+	<bean id="extSqlSeSssionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:/mappers/*Mapper.xml" />
+	</bean>
+</beans>

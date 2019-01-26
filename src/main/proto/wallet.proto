@@ -1,0 +1,353 @@
+syntax = "proto3";
+
+package org.csc.wallet.service;
+
+enum PWLTModule {
+    WLT = 0; //钱包模块
+};
+enum PWLTCommand {
+    CNA = 0; // 创建地址；请求：ReqNewAddress；返回：RetNewAddress
+    ADQ = 1; // 查询地址；请求：ReqGetAccount；返回：RespGetAccount
+    TXC = 2; // 创建交易；请求：ReqCreateMultiTransaction；返回：RespCreateTransaction
+    QTS = 3; // 查询交易；请求：ReqGetTxByHash；返回：RespGetTxByHash
+    //NCR = 4; // 创建合约；请求：ReqCreateContractTransaction；返回：RespCreateContractTransaction
+    //DCR = 5; // 执行合约；请求：ReqDoContractTransaction；返回：RespCreateTransaction
+    LBQ = 7; // 查询最长块；请求：；返回：RespBlockDetail
+    QMK = 8; // 查询当前钱包下的代币余额；请求 ReqGetMarketInfo ;返回 RespGetMarketInfo
+    CCS = 9; // 编译合约；请求 ReqCompileContract ;返回 RespCompileContract
+    QTB = 10; // QTB 查询交易块 ；请求：ReqGetTxByHash；返回：RespGetBlock
+    TXD = 11; //默认交易 由创建交易拆分而来RespBlockDetail
+    TBC = 12; // Transaction: Build Contract 创建合约
+    TCC = 13; // Transaction: Call Contract 调用合约
+    TBT = 14; // Transaction: Build Token 创建ERC20 Token代币
+    TTT = 15; // Transaction: Token Transact ERC20 Token代币交易
+    TBR = 16; //Transaction: Build Crypto Token 创建ERC721 代币
+    TRT = 17; //Transaction: Crypto Token  Transact ERC721代币交易
+};
+
+message ReqGetMarketInfo {
+    string walletType = 1; //钱包类型 钱包类型
+}
+
+message RespGetMarketInfo {
+    int32 rpl_code = 1; //返回码
+    string msg = 2; //返回信息
+    string rmbRate = 3; //总市值
+    repeated MarketInfDetail list = 4;
+    string mainRate = 5; //主账户的美金市值
+}
+
+message MarketInfDetail {
+    string coinSymbol = 1; //币简称
+    string coinRate = 2; //币的兑率
+}
+
+//基础对象
+message BaseData {
+    string data = 1; //加密数据
+    string busi = 2; //对接平台：如：cwv
+}
+
+//地址相关
+
+//创建地址请求
+message ReqNewAddress {
+    string seed = 1; //生成地址助记词
+};
+
+//创建地址返回
+message RetNewAddress {
+    int32 rpl_code = 1; //返回码
+    string msg = 2; //返回信息
+    string addr = 3; //账户地址
+};
+
+//查询地址请求
+message ReqGetAccount {
+    string address = 1; //地址
+    string type = 2; //类型（为以后对接ETH作准备）
+    int32 s = 3; //pageSize
+    int32 p = 4; //pageIndex
+};
+
+//查询地址返回
+message RespGetAccount {
+    int32 rpl_code = 1; //返回码
+    string addr = 2; //地址
+    string rpl_msg = 3; //返回信息
+    AccountValueImpl account = 4; //地址详细信息
+
+};
+
+//地址详细信息
+message AccountValueImpl {
+    int32 nonce = 1; //交易次数
+    string code = 2; //智能合约的源码
+    string balance = 3; //账户余额
+    string pubKey = 4; //账户公钥
+    //int32 acceptLimit = 5;//
+    //int64 max = 6;//
+    //int64 acceptMax = 7;//
+    string storage = 8;
+    repeated string address = 9; //地址
+    repeated AccountTokenValueImpl tokens = 10; //ERC20 token
+    repeated AccountCryptoValueImpl cryptos = 11; //ERC721 token
+};
+
+//ERC20 token详情
+message AccountTokenValueImpl {
+    string token = 1; //token
+    string balance = 2; //账户余额
+};
+
+//ERC721 token详情
+message AccountCryptoValueImpl {
+    string symbol = 1; // 用于分类ERC721 Token的标记
+    repeated AccountCryptoTokenImpl tokens = 2; //token详情
+};
+
+//token详情
+message AccountCryptoTokenImpl {
+    string hash = 1; // Token的hash，hash(index,total,code,name,timestamp)
+    int64 timestamp = 2; // Token创建时间
+    int32 index = 3; // 该Token发行时的索引
+    int32 total = 4; // 该Token的发行总数量
+    string code = 5; // Token的编号
+    string name = 6; // Token的名称
+    string owner = 7; // 所有人的账户地址
+    int32 nonce = 8; // 交易次数
+    int64 ownertime = 9; // 所有人获取时间
+};
+
+//合约相关
+//创建合约请求
+message ReqCreateContractTransaction {
+    MultiTransactionInputImpl input = 1; //合约发起方
+    string exdata = 2; //附属信息
+    MultiTransactionSignatureImpl signature = 3; //合约签名
+    repeated string delegate = 4; //代理
+    string data = 5; //合约内容
+    int64 timestamp = 6; //时间戳
+};
+
+//创建合约返回
+message RespCreateContractTransaction {
+    string txHash = 1; //交易hash
+    string contractHash = 2; //合约地址
+    int32 rpl_code = 3; //返回码
+    string rpl_msg = 4; //返回信息
+};
+
+//执行合约请求,与创建交易相同。执行合约返回为：RespCreateTransaction
+message ReqDoContractTransaction {
+    MultiTransactionImpl transaction = 1; //交易内容
+};
+
+//交易相关参数
+message ReqGetTxByHash {//根据交易hash查询交易请求
+                        string hash = 1;//交易hash
+};
+
+message RespGetTxByHash {//根据交易hash查询交易返回
+                         int32 rpl_code = 1; //返回码
+                         string rpl_msg = 2; //返回信息
+                         MultiTransactionImpl transaction = 3; //交易详情
+};
+
+message ReqCreateMultiTransaction {//创建交易请求
+                                   MultiTransactionImpl transaction = 1;//交易内容
+};
+
+
+//创建交易返回;执行合约返回
+message RespCreateTransaction {
+    int32 rpl_code = 1; //返回码
+    string rpl_msg = 2; //返回信息
+    string txHash = 3; //交易hash
+    string contractHash = 4;//合约地址
+};
+
+//交易详情
+message MultiTransactionImpl {
+    string txHash = 1; //交易hash
+    string status = 2; //交易状态
+    string result = 3; //合约返回结果
+    MultiTransactionNodeImpl node = 4; //交易节点
+    MultiTransactionBodyImpl txBody = 5; //交易内容体
+};
+
+//交易内容体详情
+message MultiTransactionBodyImpl {
+    int32 type = 1; //交易类型
+    int64 timestamp = 2; //时间戳
+    string data = 3; //合约内容
+    string exdata = 4; //附属信息
+    repeated string delegate = 5; //代理
+    repeated MultiTransactionInputImpl inputs = 6; //发起方
+    repeated MultiTransactionOutputImpl outputs = 7; //接收方
+    repeated MultiTransactionSignatureImpl signatures = 8; //签名
+    CryptoTokenData cryptoTokenData = 9; //721数据
+
+};
+
+//发起方详情
+message MultiTransactionInputImpl {
+    int32 nonce = 1; //交易次数
+    int32 fee = 2; //手续费
+    int32 feeLimit = 3; //。。。。
+    string token = 4; //ERC20 token名字
+    string symbol = 5; //ERC721 token标记
+    string amount = 6; //交易金额
+    string address = 7; //发起方地址
+    string cryptoToken = 8; //ERC721 token名字
+};
+
+//接收方详情
+message MultiTransactionOutputImpl {
+    string amount = 1; //交易金额
+    string symbol = 2; //ERC721 token 标记
+    string address = 3; //接收方地址
+    string cryptoToken = 4; //ERC721 token名字
+};
+
+//签名详情
+message MultiTransactionSignatureImpl {
+    string signature = 1; //签名信息
+};
+
+//交易节点信息
+message MultiTransactionNodeImpl {
+    string ip = 1; //节点IP
+    string node = 2; //节点名称
+    string bcuid = 3; //节点唯一标识
+};
+
+// 非 IMPL 对象 //
+message MultiTransaction {
+    bytes txHash = 1;//交易hash
+    MultiTransactionBody txBody = 2; // 交易信息体
+    string status = 3; //交易状态
+    MultiTransactionNode txNode = 4; //交易的节点
+}
+
+message MultiTransactionBody {
+    repeated MultiTransactionInput inputs = 1;
+    repeated MultiTransactionOutput outputs = 2;
+    bytes exdata = 3;
+    repeated MultiTransactionSignature signatures = 4;//交易的签名数据
+    repeated bytes delegate = 5;
+    bytes data = 6;
+    int64 timestamp = 7;
+    int32 type = 8;
+}
+
+message MultiTransactionInput {
+    int32 nonce = 1;
+    int32 fee = 2;
+    int32 feeLimit = 3;
+    bytes address = 4;
+    bytes amount = 5;
+    string token = 7;
+    string symbol = 8;
+    bytes cryptoToken = 9;
+}
+message MultiTransactionOutput {
+    bytes address = 1;
+    bytes amount = 2;
+    string symbol = 3;
+    bytes cryptoToken = 4;
+}
+
+message MultiTransactionSignature {
+    bytes signature = 1;
+}
+
+message MultiTransactionNode {
+    string node = 1;
+    string address = 2;
+    string bcuid = 3;
+}
+
+message Test {
+    bool flag = 1;
+};
+
+message RespBlockDetail {
+    int32 rpl_code = 1;
+    int64 timestamp = 2;
+    int64 number = 3;//块高度
+    int64 sliceId = 5;
+    // string coinbase = 6;
+    string rpl_msg = 7;
+    string parentHash = 8;//上一块的hash
+    string txTrieRoot = 9;//交易的数的根
+    string extraData = 10;
+    string nonce = 11;//交易次数
+    string blockHash = 12;//区块hash
+    repeated string txHashs = 13; //当前区块里面的所有交易hash
+    string stateRoot = 14; //状态树根
+    BlockMinerImpl miner = 15; //矿工信息
+}
+
+message ReqCompileContract{
+    string code = 1;//智能合约的源码
+    string contract_address = 5;//合约地址  暂时没用
+    string contractName = 6;//需要编译的合约名称
+    string function = 2;//需要编译智能合约的方法， 只有编译方法时传入，编译整体合约时用不到
+    //编译智能合约时传入的方法参数
+    message Param {
+        string type = 1;
+        string value = 2;
+        repeated string values = 3;
+    }
+
+    repeated Param params = 3;
+}
+
+message RespCompileContract {
+    int32 rpl_code = 1;
+    string rpl_msg = 2;
+    string address = 3;//暂时没用到
+    string bin = 4;//编译智能合约以后的bin码
+    string abi = 5;//abi码
+    string code = 6;//智能合约的源码
+    string function_bin = 7; //方法bin
+}
+
+message RespGetBlock {
+    int32 rpl_code = 1;
+    string rpl_msg = 2;
+    string version = 3;//当前区块的头信息
+    BlockMinerImpl miner = 4;//矿工信息
+    BlockHeaderImpl header = 5;//区块头信息
+}
+
+message BlockMinerImpl {
+    string node = 1;//挖矿节点
+    string reward = 3;//挖矿奖励
+    string address = 4;//矿工地址
+    string bcuid = 5;// bcuid 当前节点的唯一标识
+}
+
+
+message BlockHeaderImpl {
+    int64 number = 1;//区块高度
+    int64 timestamp = 2;//区块的产生时间
+    int64 sliceId = 3;//分片id
+    string blockHash = 4;//区块hash
+    string parentHash = 5;//上一个区块的hash
+    string state = 6;//交易状态
+    string receipt = 7;//
+    string txTrieRoot = 8;//
+    string extraData = 9;//区块其他信息
+    repeated string txHashs = 10;//当前区块对应的所有交易hash
+}
+
+//交易节点信息
+message CryptoTokenData {
+    int64 total = 1; // total:总量
+    string symbol = 2; // symbol:名称
+    bytes extData = 3; // extData:扩展信息
+    repeated string name = 4; // name:单个721 name
+    repeated string code = 5; // code：单个721 ID
+};

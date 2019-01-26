@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package org.csc.wallet.service;
+
+enum PWLTCacheModule {
+	WTA = 0;//钱包模块
+};
+enum PWLTCacheCommand {
+	PSS = 0;//清除缓存的接口 勿删除
+};
+
+message PRetCommon {
+	int32 code = 1;//操作是否成功
+}
+
+
+
+
